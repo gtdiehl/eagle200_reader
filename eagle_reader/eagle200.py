@@ -66,7 +66,7 @@ class EagleReader:
             if child[0]['Name'] == value_name:
                 return child[1]['Value']
     
-    def get_instantanous_demand(self):
+    def instantanous_demand(self):
         try:
             device_attributes = EagleReader.call_api(self)
             instantanous_demand = self.get_value(device_attributes, 'zigbee:InstantaneousDemand')
@@ -93,6 +93,6 @@ class EagleReader:
 
 if __name__ == "__main__":
     testreader = EagleReader(sys.argv[1], sys.argv[2], sys.argv[3])
-    print("Instantanous Demand:     {} kW".format(testreader.get_instantanous_demand()))
+    print("Instantanous Demand:     {} kW".format(testreader.instantanous_demand()))
     print("Total Energy Delivered:  {} kWh".format(testreader.get_summation_delivered()))
     print("Total Energy Received:   {} kWh".format(testreader.get_summation_received()))
