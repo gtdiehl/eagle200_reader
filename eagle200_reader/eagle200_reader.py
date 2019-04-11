@@ -74,7 +74,7 @@ class EagleReader:
         except Exception:
             traceback.print_exc(file=sys.stdout)
             
-    def get_summation_delivered(self):
+    def summation_delivered(self):
         try:
             device_attributes = EagleReader.call_api(self)
             instantanous_demand = self.get_value(device_attributes, 'zigbee:CurrentSummationDelivered')
@@ -83,7 +83,7 @@ class EagleReader:
             traceback.print_exc(file=sys.stdout)
 
     
-    def get_summation_received(self):
+    def summation_received(self):
         try:
             device_attributes = EagleReader.call_api(self)
             instantanous_demand = self.get_value(device_attributes, 'zigbee:CurrentSummationReceived')
@@ -94,5 +94,5 @@ class EagleReader:
 if __name__ == "__main__":
     testreader = EagleReader(sys.argv[1], sys.argv[2], sys.argv[3])
     print("Instantanous Demand:     {} kW".format(testreader.instantanous_demand()))
-    print("Total Energy Delivered:  {} kWh".format(testreader.get_summation_delivered()))
-    print("Total Energy Received:   {} kWh".format(testreader.get_summation_received()))
+    print("Total Energy Delivered:  {} kWh".format(testreader.summation_delivered()))
+    print("Total Energy Received:   {} kWh".format(testreader.summation_received()))
