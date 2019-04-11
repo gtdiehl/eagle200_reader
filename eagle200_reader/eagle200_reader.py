@@ -70,15 +70,25 @@ class EagleReader:
         try:
             device_attributes = EagleReader.call_api(self)
             instantanous_demand = self.get_value(device_attributes, 'zigbee:InstantaneousDemand')
-            return float(instantanous_demand)
+            # Eagle-200 has a bug, sometimes the Value for Instantanous Demand will be blank.  When this
+            # occurs a value of None will be returned
+            if instantanous_demand is not None:
+                return float(instantanous_demand)
+            else:
+                return None
         except Exception:
             traceback.print_exc(file=sys.stdout)
             
     def summation_delivered(self):
         try:
             device_attributes = EagleReader.call_api(self)
-            instantanous_demand = self.get_value(device_attributes, 'zigbee:CurrentSummationDelivered')
-            return float(instantanous_demand)
+            summation_delivered = self.get_value(device_attributes, 'zigbee:CurrentSummationDelivered')
+            # Eagle-200 has a bug, sometimes the Value for Summation Delivered will have the incorrect
+            # decimal place.  If a decimal point is not found than a value of None will be returned
+            if summation_delivered[::-1].find('.') > 0:
+                return float(summation_delivered)
+            else:
+                return None
         except Exception:
             traceback.print_exc(file=sys.stdout)
 
@@ -86,8 +96,13 @@ class EagleReader:
     def summation_received(self):
         try:
             device_attributes = EagleReader.call_api(self)
-            instantanous_demand = self.get_value(device_attributes, 'zigbee:CurrentSummationReceived')
-            return float(instantanous_demand)
+            summation_received = self.get_value(device_attributes, 'zigbee:CurrentSummationReceived')
+            # Eagle-200 has a bug, sometimes the Value for Summation Received will have the incorrect
+            # decimal place.  If a decimal point is not found that the value will not be returned
+            if summation_received[::-1].find('.') > 0:
+                return float(summation_received)
+            else:
+                return None
         except Exception:
             traceback.print_exc(file=sys.stdout)
 
