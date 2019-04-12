@@ -84,8 +84,9 @@ class EagleReader:
             device_attributes = EagleReader.call_api(self)
             summation_delivered = self.get_value(device_attributes, 'zigbee:CurrentSummationDelivered')
             # Eagle-200 has a bug, sometimes the Value for Summation Delivered will have the incorrect
-            # decimal place.  If a decimal point is not found than a value of None will be returned
-            if summation_delivered[::-1].find('.') > 0:
+            # decimal place.  If six zeros to the right of the decimal point are found than it'll assume
+            # the value is incorrect and return None
+            if summation_delivered[summation_delivered.find('.')+1:] != "000000":
                 return float(summation_delivered)
             else:
                 return None
@@ -98,8 +99,9 @@ class EagleReader:
             device_attributes = EagleReader.call_api(self)
             summation_received = self.get_value(device_attributes, 'zigbee:CurrentSummationReceived')
             # Eagle-200 has a bug, sometimes the Value for Summation Received will have the incorrect
-            # decimal place.  If a decimal point is not found that the value will not be returned
-            if summation_received[::-1].find('.') > 0:
+            # decimal place.  If six zeros to the right of the decimal point are found than it'll assume
+            # the value is incorrect and return None
+            if summation_received[summation_received.find('.')+1:] != "000000":
                 return float(summation_received)
             else:
                 return None
