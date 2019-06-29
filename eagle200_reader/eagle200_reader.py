@@ -19,7 +19,14 @@ class EagleReader:
         self.ip_addr = ip_addr
         self.cloud_id = cloud_id
         self.install_code = install_code
-    
+        
+        self.instantanous_demand_value = 0.0
+        self.summation_delivered_value = 0.0
+        self.summation_received_value = 0.0
+        self.summation_total_value = 0.0
+        
+        self._call_api()
+        
     '''
     Entry point from public functions
     '''    
@@ -65,7 +72,11 @@ class EagleReader:
                 of all variable names and values
                 '''
             else:
-                return self._create_attributes(response)
+                self._instantanous_demand(self._create_attributes(response))
+                self._summation_delivered(self._create_attributes(response))
+                self._summation_received(self._create_attributes(response))
+                self._summation_total(self._create_attributes(response))
+                
         elif len(devices) > 1 and len(devices) != 0:
             print("Currently only the API only supports a single device")
             return None
@@ -158,23 +169,33 @@ class EagleReader:
                 return child[1]['Value']
     
     def instantanous_demand(self):
+        if self.instantanous_demand_value is not None:
+            return float(self.instantanous_demand_value)
+        else:
+            return None
+    
+    def _instantanous_demand(self, device_attributes):
         try:
-            device_attributes = EagleReader._call_api(self)
             if device_attributes is None:
                 return None
             instantanous_demand = self._get_value(device_attributes, 'zigbee:InstantaneousDemand')
             # Eagle-200 has a bug, sometimes the Value for Instantanous Demand will be blank.  When this
             # occurs a value of None will be returned
             if instantanous_demand is not None:
-                return float(instantanous_demand)
+                self.instantanous_demand_value = instantanous_demand
             else:
-                return None
+                self.instantanous_demand_value = None
         except Exception as e:
             print(e)
-            
+
     def summation_delivered(self):
+        if self.summation_delivered_value is not None:
+            return float(self.summation_delivered_value)
+        else:
+            return None
+            
+    def _summation_delivered(self, device_attributes):
         try:
-            device_attributes = EagleReader._call_api(self)
             if device_attributes is None:
                 return None
             summation_delivered = self._get_value(device_attributes, 'zigbee:CurrentSummationDelivered')
@@ -182,16 +203,20 @@ class EagleReader:
             # decimal place.  If six zeros to the right of the decimal point are found than it'll assume
             # the value is incorrect and return None
             if summation_delivered[summation_delivered.find('.')+1:] != "000000":
-                return float(summation_delivered)
+                self.summation_delivered_value = summation_delivered
             else:
-                return None
+                self.summation_delivered_value = None
         except Exception as e:
             print(e)
 
-    
     def summation_received(self):
+        if self.summation_received_value is not None:
+            return float(self.summation_received_value)
+        else:
+            return None
+        
+    def _summation_received(self, device_attributes):
         try:
-            device_attributes = EagleReader._call_api(self)
             if device_attributes is None:
                 return None
             summation_received = self._get_value(device_attributes, 'zigbee:CurrentSummationReceived')
@@ -199,20 +224,25 @@ class EagleReader:
             # decimal place.  If six zeros to the right of the decimal point are found than it'll assume
             # the value is incorrect and return None
             if summation_received[summation_received.find('.')+1:] != "000000":
-                return float(summation_received)
+                self.summation_received_value = summation_received
             else:
-                return None
+                self.summation_received_value = None
         except Exception as e:
             print(e)
             
     def summation_total(self):
-        delivered = self.summation_delivered()
-        received = self.summation_received()
-        
-        if delivered is not None and received is not None:
-            return delivered - received
+        if self.summation_total_value is not None:
+            return float(self.summation_total_value)
         else:
             return None
+    
+    def _summation_total(self, device_attributes):
+        
+        if self.summation_delivered_value is not None and self.summation_received_value is not None:
+            self.summation_total_value = (float(self.summation_delivered_value) - float(self.summation_received_value))
+        else:
+            self.summation_total_value = None
+
 
 if __name__ == "__main__":
     testreader = EagleReader(sys.argv[1], sys.argv[2], sys.argv[3])
