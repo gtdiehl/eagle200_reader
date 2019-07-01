@@ -1,1 +1,1 @@
-from eagle_reader.eagle_reader import EagleReader
+from eagle200_reader.eagle200_reader import EagleReader
