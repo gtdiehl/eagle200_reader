@@ -243,6 +243,17 @@ class EagleReader:
         else:
             self.summation_total_value = None
 
+    def update(self):
+        data = {}
+        self._call_api()
+        
+        data['instantanous_demand'] = self.instantanous_demand_value
+        data['summation_delivered'] = self.summation_delivered_value
+        data['summation_received'] = self.summation_received_value
+        data['summation_total'] = self.summation_total_value
+        
+        return data
+        
 
 if __name__ == "__main__":
     testreader = EagleReader(sys.argv[1], sys.argv[2], sys.argv[3])
