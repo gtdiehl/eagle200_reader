@@ -9,7 +9,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setuptools.setup(
     name='eagle200_reader',
-    version='0.1.4',
+    version='0.2.0',
     description='A program to read from an Rainforest Eagle-200 on the local network',
     long_description=long_description,
     url='https://github.com/gtdiehl/eagle200_reader',
