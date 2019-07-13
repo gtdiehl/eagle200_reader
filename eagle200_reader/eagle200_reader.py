@@ -35,7 +35,10 @@ class EagleReader:
         Get the hardware address of the Power Meter.  This address is required
         to build the XML Post request.
         '''
-        devices = self._get_device_address()
+        try:
+            devices = self._get_device_address()
+        except requests.exceptions.RequestException as e:
+            raise e
         
         '''
         Currently only one Power Meter and no other devices associated with
@@ -50,23 +53,8 @@ class EagleReader:
             try:
                 response = requests.post("http://" + self.ip_addr + 
                     "/cgi-bin/post_manager", http_device_query, auth=(self.cloud_id, self.install_code), timeout=2)
-                '''
-                This exception occurs after if a resonse from the request is not received
-                in 2 seconds. And returns None
-                '''
-            except requests.exceptions.Timeout as e:
-                return None
-                '''
-                This exception occurs if a new connection cannot be made to the
-                Eagle-200. And returns None
-                '''
-            except requests.exceptions.ConnectionError as e:
-                return None
-                '''
-                Returns None for all other Request Exceptions
-                '''
             except requests.exceptions.RequestException as e:
-                return None
+                raise e
                 '''
                 If no exceptions occur, process the response and create a dictionary
                 of all variable names and values
@@ -78,10 +66,18 @@ class EagleReader:
                 self._summation_total(self._create_attributes(response))
                 
         elif len(devices) > 1 and len(devices) != 0:
-            print("Currently only the API only supports a single device")
+            self.instantanous_demand_value = None
+            self.summation_delivered_value = None
+            self.summation_received_value = None
+            self.summation_total_value = None            
+            #print("Currently only the API only supports a single device")
             return None
         else:
-            print("Device list is empty!")
+            self.instantanous_demand_value = None
+            self.summation_delivered_value = None
+            self.summation_received_value = None
+            self.summation_total_value = None
+            #print("Device list is empty!")
             return None
         
     '''
@@ -98,23 +94,8 @@ class EagleReader:
         try:
             response = requests.post("http://" + self.ip_addr + 
                 "/cgi-bin/post_manager", HTTP_DEVICE_LIST, auth=(self.cloud_id, self.install_code), timeout=2)
-            '''
-            This exception occurs after if a resonse from the request is not received
-            in 2 seconds. And return an empty devices list
-            '''
-        except requests.exceptions.Timeout as e:
-            return devices
-            '''
-            This exception occurs if a new connection cannot be made to the
-            Eagle-200. And return an empty devices list
-            '''
-        except requests.exceptions.ConnectionError as e:
-            return devices
-            '''
-            Returns an empty devices list for all other Request Exceptions
-            '''
         except requests.exceptions.RequestException as e:
-            return devices
+            raise e 
             '''
             Process the XML if no exceptions occur
             '''
@@ -186,7 +167,7 @@ class EagleReader:
             else:
                 self.instantanous_demand_value = None
         except Exception as e:
-            print(e)
+            return None
 
     def summation_delivered(self):
         if self.summation_delivered_value is not None:
@@ -207,7 +188,7 @@ class EagleReader:
             else:
                 self.summation_delivered_value = None
         except Exception as e:
-            print(e)
+            return None
 
     def summation_received(self):
         if self.summation_received_value is not None:
@@ -228,7 +209,7 @@ class EagleReader:
             else:
                 self.summation_received_value = None
         except Exception as e:
-            print(e)
+            return None
             
     def summation_total(self):
         if self.summation_total_value is not None:
