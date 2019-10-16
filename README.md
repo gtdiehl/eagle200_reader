@@ -3,10 +3,10 @@ Eagle200 Reader
 
 Gather data locally from a Rainforest Eagle-200 device.
 
-Eagle200 Rader provides the ability to retrieve data from a Rainforest 
-Eagle-200 device from the local network, rather than from the cloud.  Three
-arguments are needed to connect to the device; IP Address, Cloud ID (aka Username),
-and Install Code (aka Password).
+Eagle200 Reader provides the ability to retrieve data from a 
+[Rainforest Eagle-200](https://rainforestautomation.com/rfa-z114-eagle-200/) device
+from the local network, rather than from the cloud.  Three arguments are needed to 
+connect to the device; IP Address, Cloud ID (aka Username), and Install Code (aka Password).
 
 Typical usage often looks like this::
 
