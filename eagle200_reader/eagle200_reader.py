@@ -80,19 +80,12 @@ class EagleReader:
     '''
     def _get_device_address(self):
         devices = []
-        try:
-            response = requests.post("http://" + self.ip_addr +
-                "/cgi-bin/post_manager", HTTP_DEVICE_LIST, auth=(self.cloud_id, self.install_code), timeout=2)
-        except requests.exceptions.RequestException as e:
-            raise e
-            '''
-            Process the XML if no exceptions occur
-            '''
-        else:
-            tree = ET.fromstring(response.content)
-            for node in tree.iter('HardwareAddress'):
-                devices.append(node.text)
-            return devices
+        response = requests.post("http://" + self.ip_addr +
+            "/cgi-bin/post_manager", HTTP_DEVICE_LIST, auth=(self.cloud_id, self.install_code), timeout=2)
+        tree = ET.fromstring(response.content)
+        for node in tree.iter('HardwareAddress'):
+            devices.append(node.text)
+        return devices
 
     def _build_xml_device_query(self, hardware_address):
         http_device_query = """
