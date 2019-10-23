@@ -47,20 +47,12 @@ class EagleReader:
         '''
         if len(devices) == 1:
             http_device_query = self._build_xml_device_query(devices[0])
-            try:
-                response = requests.post("http://" + self.ip_addr +
-                    "/cgi-bin/post_manager", http_device_query, auth=(self.cloud_id, self.install_code), timeout=2)
-            except requests.exceptions.RequestException as e:
-                raise e
-                '''
-                If no exceptions occur, process the response and create a dictionary
-                of all variable names and values
-                '''
-            else:
-                self._instantanous_demand(self._create_attributes(response))
-                self._summation_delivered(self._create_attributes(response))
-                self._summation_received(self._create_attributes(response))
-                self._summation_total(self._create_attributes(response))
+            response = requests.post("http://" + self.ip_addr +
+                "/cgi-bin/post_manager", http_device_query, auth=(self.cloud_id, self.install_code), timeout=2)
+            self._instantanous_demand(self._create_attributes(response))
+            self._summation_delivered(self._create_attributes(response))
+            self._summation_received(self._create_attributes(response))
+            self._summation_total(self._create_attributes(response))
 
         elif len(devices) > 1 and len(devices) != 0:
             self.instantanous_demand_value = None
