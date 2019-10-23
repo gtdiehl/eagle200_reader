@@ -35,10 +35,7 @@ class EagleReader:
         Get the hardware address of the Power Meter.  This address is required
         to build the XML Post request.
         '''
-        try:
-            devices = self._get_device_address()
-        except requests.exceptions.RequestException as e:
-            raise e
+        devices = self._get_device_address()
 
         '''
         Currently only one Power Meter and no other devices associated with
