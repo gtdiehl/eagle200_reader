@@ -201,10 +201,13 @@ class EagleReader:
 
     def _summation_total(self, device_attributes):
 
-        if self.summation_delivered_value is not None and self.summation_received_value is not None:
-            self.summation_total_value = (float(self.summation_delivered_value) - float(self.summation_received_value))
-        else:
-            self.summation_total_value = None
+        if self.summation_delivered_value is None 
+		    self.summation_delivered_value = 0.0
+		
+		if self.summation_received_value is None:
+		    self.summation_received_value = 0.0
+			
+        self.summation_total_value = (float(self.summation_delivered_value) - float(self.summation_received_value))
 
     def update(self):
         data = {}
