@@ -7,3 +7,4 @@ v0.2.0, July 5, 2019 -- Added Update method for Home Assistant
 v0.2.1, July 12, 2019 -- Added more error handling
 v0.2.2, Nov. 15, 2019 -- Merged PR - Removed try/catch blocks, fixed typos, and removed whitespace
 v0.2.3, Mar. 10, 2020 -- Converted None values to zero so they can be calculated
+v0.2.4, Mar. 10, 2020 -- Fixed typo
