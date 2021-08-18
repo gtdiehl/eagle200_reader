@@ -82,6 +82,7 @@ class EagleReader:
         devices = []
         response = requests.post("http://" + self.ip_addr +
             "/cgi-bin/post_manager", HTTP_DEVICE_LIST, auth=(self.cloud_id, self.install_code), timeout=2)
+        response.raise_for_status()
         tree = ET.fromstring(response.content)
         for node in tree.iter('HardwareAddress'):
             devices.append(node.text)
