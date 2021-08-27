@@ -1,3 +1,6 @@
+### This library is no longer maintained. The purpose was to support the Eagle-200 hardware device in Home Assistant. Home Assistant has replaced this library with [aioeagle](https://github.com/home-assistant-libs/aioeagle)
+
+
 Eagle200 Reader
 ===============
 
